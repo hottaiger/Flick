@@ -52,7 +52,7 @@ struct DisplayPlacementResolver {
         return NSRect(x: x, y: right.minY, width: width, height: right.height)
     }
 
-    static func expandedFrame(on screen: NSScreen, width: CGFloat = 420, height: CGFloat = 510, placement: ExternalDisplayPlacement = .center) -> NSRect {
+    static func expandedFrame(on screen: NSScreen, width: CGFloat = 420, height: CGFloat = 430, placement: ExternalDisplayPlacement = .center) -> NSRect {
         let collapsed = collapsedFrame(on: screen, width: width, height: 34, placement: placement)
         return NSRect(x: collapsed.minX, y: screen.visibleFrame.maxY - height, width: width, height: height)
     }

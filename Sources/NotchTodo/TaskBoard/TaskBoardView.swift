@@ -45,7 +45,7 @@ struct TaskBoardView: View {
             }
         }
         .padding(14)
-        .frame(width: 420, height: 510, alignment: .top)
+        .frame(width: 420, height: 430, alignment: .top)
         .background(.regularMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(.white.opacity(0.12)))
@@ -67,16 +67,20 @@ struct TaskBoardView: View {
         }
     }
 
-    /// 单栏任务列表（拖拽排序：拖到卡片上=插前，拖到空白=追加尾）。
+    /// 单栏任务列表（可滚动、撑满剩余高度；拖拽排序：拖到卡片上=插前，拖到空白=追加尾）。
     private var boardList: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            ForEach(store.boardTasks, id: \.id) { task in
-                TaskCardView(task: task, store: store, editorTask: editorBinding, activity: controller.registerActivity)
-                    .draggable(task.id.uuidString)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 6) {
+                ForEach(store.boardTasks, id: \.id) { task in
+                    TaskCardView(task: task, store: store, editorTask: editorBinding, activity: controller.registerActivity)
+                        .draggable(task.id.uuidString)
+                }
             }
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+            .padding(7)
         }
-        .padding(7)
-        .frame(maxWidth: .infinity, minHeight: 220, alignment: .top)
+        .scrollBounceBehavior(.basedOnSize)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(isBoardTargeted ? AnyShapeStyle(Color.accentColor.opacity(0.13)) : AnyShapeStyle(.quaternary.opacity(0.3)), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
         .dropDestination(for: String.self) { identifiers, _ in
             guard let raw = identifiers.first,
