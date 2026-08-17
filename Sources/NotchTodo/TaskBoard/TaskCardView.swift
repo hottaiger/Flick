@@ -13,11 +13,14 @@ struct TaskCardView: View {
     let store: TaskStore
     @Binding var editorTask: TodoTask?
     let activity: () -> Void
+    @State private var isDropTargeted = false
 
     var body: some View {
         cardContent
-            .padding(7)
-            .background(.quaternary.opacity(0.55), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+            .padding(.vertical, 4)
+            .padding(.horizontal, 6)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(isDropTargeted ? AnyShapeStyle(Color.accentColor.opacity(0.15)) : AnyShapeStyle(.clear), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
             .contentShape(Rectangle())
             .onTapGesture { editorTask = task; activity() }
             .focusable()
@@ -43,7 +46,7 @@ struct TaskCardView: View {
                 store.move(dragged, before: task)
                 activity()
                 return true
-            }
+            } isTargeted: { isDropTargeted = $0 }
             .accessibilityElement(children: .combine)
     }
 
@@ -56,7 +59,7 @@ struct TaskCardView: View {
                 toggleCompletion()
             } label: {
                 Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(task.isCompleted ? .green : priorityColor)
+                    .foregroundStyle(task.isCompleted ? Color.accentColor : priorityColor)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(task.isCompleted ? L10n.t("card.reopenAccessibility", task.title) : L10n.t("card.completeAccessibility", task.title))
@@ -73,8 +76,8 @@ struct TaskCardView: View {
                 activity()
             } label: {
                 Image(systemName: task.isPinned ? "pin.fill" : "pin")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(task.isPinned ? .blue : .secondary)
+                    .font(.system(size: 12))
+                    .foregroundStyle(task.isPinned ? Color.accentColor : Color.secondary)
             }
             .buttonStyle(.plain)
             .help(task.isPinned ? L10n.t("card.unpin") : L10n.t("card.pin"))
@@ -83,8 +86,8 @@ struct TaskCardView: View {
                 TaskTitleClipboard.copy(task.title)
                 activity()
             } label: {
-                Image(systemName: "doc.on.doc")
-                    .font(.system(size: 11, weight: .medium))
+                Image(systemName: "square.on.square")
+                    .font(.system(size: 12))
                     .foregroundStyle(.secondary)
             }
             .buttonStyle(.plain)
