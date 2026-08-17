@@ -33,6 +33,7 @@
 "card.pinAccessibility" = "置顶 %@";
 "card.unpinAccessibility" = "取消置顶 %@";
 "card.copyTitle" = "复制标题";
+"toast.copied" = "复制成功";
 "card.copyAccessibility" = "复制待办标题：%@";
 "card.completeAccessibility" = "完成 %@";
 "card.reopenAccessibility" = "恢复 %@";

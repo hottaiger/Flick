@@ -23,7 +23,7 @@ enum ShortcutChoice: String, CaseIterable, Identifiable {
 
 @MainActor
 final class AppSettings: ObservableObject {
-    static let defaultAutoCollapseSeconds = 10.0
+    static let defaultAutoCollapseSeconds = 0.0
 
     private let defaults = UserDefaults.standard
 

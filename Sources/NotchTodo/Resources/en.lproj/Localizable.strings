@@ -33,6 +33,7 @@
 "card.pinAccessibility" = "Pin %@";
 "card.unpinAccessibility" = "Unpin %@";
 "card.copyTitle" = "Copy title";
+"toast.copied" = "Copied";
 "card.copyAccessibility" = "Copy task title: %@";
 "card.completeAccessibility" = "Complete %@";
 "card.reopenAccessibility" = "Reopen %@";

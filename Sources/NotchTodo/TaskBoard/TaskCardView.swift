@@ -84,6 +84,7 @@ struct TaskCardView: View {
             .accessibilityLabel(task.isPinned ? L10n.t("card.unpinAccessibility", task.title) : L10n.t("card.pinAccessibility", task.title))
             Button {
                 TaskTitleClipboard.copy(task.title)
+                store.showToast(L10n.t("toast.copied"))
                 activity()
             } label: {
                 Image(systemName: "square.on.square")

@@ -11,6 +11,9 @@ final class TaskStore: ObservableObject {
     /// 单栏看板列表：置顶任务在前（最新置顶的最上），普通任务按 sortOrder。
     @Published private(set) var boardTasks: [TodoTask] = []
     @Published private(set) var saveError: String?
+    /// 看板内轻提示（如"复制成功"），短暂展示后自动清空。
+    @Published private(set) var toast: String?
+    private var toastDismissTask: Task<Void, Never>?
     let context: ModelContext
 
     init(context: ModelContext) {
@@ -106,6 +109,16 @@ final class TaskStore: ObservableObject {
 
     func clearError() {
         saveError = nil
+    }
+
+    func showToast(_ text: String) {
+        toast = text
+        toastDismissTask?.cancel()
+        toastDismissTask = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: 1_600_000_000)
+            guard !Task.isCancelled else { return }
+            self?.toast = nil
+        }
     }
 
     private func recomputeDerivedLists() {

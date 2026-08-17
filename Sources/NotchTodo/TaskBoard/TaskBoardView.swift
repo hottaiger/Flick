@@ -65,6 +65,18 @@ struct TaskBoardView: View {
         } message: {
             Text(store.saveError ?? "")
         }
+        .overlay(alignment: .bottom) {
+            if let toast = store.toast {
+                Text(toast)
+                    .font(.caption)
+                    .padding(.horizontal, 14).padding(.vertical, 7)
+                    .background(.quaternary.opacity(0.9), in: Capsule())
+                    .overlay(Capsule().stroke(.quaternary, lineWidth: 1))
+                    .padding(.bottom, 12)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: store.toast)
     }
 
     /// 单栏任务列表（可滚动、撑满剩余高度；拖拽排序：拖到卡片上=插前，拖到空白=追加尾）。
