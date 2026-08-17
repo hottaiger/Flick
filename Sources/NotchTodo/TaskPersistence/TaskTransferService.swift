@@ -18,12 +18,13 @@ struct TaskTransferItem: Codable, Identifiable {
     let createdAt: Date
     let completedAt: Date?
     let archivedAt: Date?
+    let pinnedAt: Date?
     let sortOrder: Double
 
     init(task: TodoTask) {
         id = task.id; title = task.title; bucket = task.bucket; priority = task.priority
         dueDate = task.dueDate; note = task.note; createdAt = task.createdAt
-        completedAt = task.completedAt; archivedAt = task.archivedAt; sortOrder = task.sortOrder
+        completedAt = task.completedAt; archivedAt = task.archivedAt; pinnedAt = task.pinnedAt; sortOrder = task.sortOrder
     }
 }
 
@@ -40,7 +41,7 @@ enum TaskTransferService {
         guard document.tasks.allSatisfy({ !$0.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }) else { throw TransferError.emptyTitle }
         let existingIDs = Set(try context.fetch(FetchDescriptor<TodoTask>()).map(\.id))
         for item in document.tasks where !existingIDs.contains(item.id) {
-            context.insert(TodoTask(id: item.id, title: item.title, bucket: item.bucket, priority: item.priority, dueDate: item.dueDate, note: item.note, createdAt: item.createdAt, completedAt: item.completedAt, archivedAt: item.archivedAt, sortOrder: item.sortOrder))
+            context.insert(TodoTask(id: item.id, title: item.title, bucket: item.bucket, priority: item.priority, dueDate: item.dueDate, note: item.note, createdAt: item.createdAt, completedAt: item.completedAt, archivedAt: item.archivedAt, pinnedAt: item.pinnedAt, sortOrder: item.sortOrder))
         }
         try context.save()
     }

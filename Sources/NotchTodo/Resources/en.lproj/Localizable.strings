@@ -28,6 +28,10 @@
 
 /* Card */
 "card.overdue" = "Overdue";
+"card.pin" = "Pin";
+"card.unpin" = "Unpin";
+"card.pinAccessibility" = "Pin %@";
+"card.unpinAccessibility" = "Unpin %@";
 "card.copyTitle" = "Copy title";
 "card.copyAccessibility" = "Copy task title: %@";
 "card.completeAccessibility" = "Complete %@";

@@ -5,6 +5,7 @@ struct TaskBoardView: View {
     @ObservedObject var controller: NotchPanelController
     @State private var isCompletedExpanded = false
     @State private var isArchivedExpanded = false
+    @State private var isBoardTargeted = false
     @State private var activeSheet: ActiveSheet?
     @FocusState private var quickAddFocused: Bool
     @AppStorage("onboardingCompleted") private var onboardingCompleted = false
@@ -20,7 +21,7 @@ struct TaskBoardView: View {
         }
     }
 
-    private var totalToday: Int { store.activeTasks.filter { $0.bucket != .later }.count + store.completedTasks.count }
+    private var totalToday: Int { store.activeTasks.count + store.completedTasks.count }
     private var completeCount: Int { store.completedTasks.count }
 
     var body: some View {
@@ -35,11 +36,23 @@ struct TaskBoardView: View {
                 Button { controller.collapse() } label: { Image(systemName: "xmark").font(.system(size: 11, weight: .bold)) }.buttonStyle(.plain).accessibilityLabel(L10n.t("board.collapse"))
             }
             QuickAddView(store: store, focused: $quickAddFocused, activity: controller.registerActivity)
-            HStack(alignment: .top, spacing: 8) {
-                ForEach([TaskBucket.now, .later]) { bucket in
-                    TaskColumnView(bucket: bucket, tasks: store.tasks(in: bucket), store: store, editorTask: editorBinding, activity: controller.registerActivity)
+            VStack(alignment: .leading, spacing: 6) {
+                ForEach(store.boardTasks, id: \.id) { task in
+                    TaskCardView(task: task, store: store, editorTask: editorBinding, activity: controller.registerActivity)
+                        .draggable(task.id.uuidString)
                 }
             }
+            .padding(7)
+            .frame(maxWidth: .infinity, minHeight: 220, alignment: .top)
+            .background(isBoardTargeted ? Color.accentColor.opacity(0.13) : Color.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .dropDestination(for: String.self) { identifiers, _ in
+                guard let raw = identifiers.first,
+                      let id = UUID(uuidString: raw),
+                      let task = store.tasks.first(where: { $0.id == id }) else { return false }
+                store.move(task, before: nil)
+                controller.registerActivity()
+                return true
+            } isTargeted: { isBoardTargeted = $0 }
             if !store.completedTasks.isEmpty {
                 HStack {
                     DisclosureGroup(L10n.t("board.completed", store.completedTasks.count), isExpanded: $isCompletedExpanded) {

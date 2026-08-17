@@ -42,6 +42,7 @@ final class TodoTask {
     var createdAt: Date
     var completedAt: Date?
     var archivedAt: Date?
+    var pinnedAt: Date?
     var sortOrder: Double
 
     init(
@@ -54,6 +55,7 @@ final class TodoTask {
         createdAt: Date = .now,
         completedAt: Date? = nil,
         archivedAt: Date? = nil,
+        pinnedAt: Date? = nil,
         sortOrder: Double = 0
     ) {
         self.id = id
@@ -65,6 +67,7 @@ final class TodoTask {
         self.createdAt = createdAt
         self.completedAt = completedAt
         self.archivedAt = archivedAt
+        self.pinnedAt = pinnedAt
         self.sortOrder = sortOrder
     }
 
@@ -80,6 +83,7 @@ final class TodoTask {
 
     var isCompleted: Bool { completedAt != nil }
     var isArchived: Bool { archivedAt != nil }
+    var isPinned: Bool { pinnedAt != nil }
     var isDueSoon: Bool {
         guard let dueDate, !isCompleted else { return false }
         return dueDate >= .now && dueDate <= Calendar.current.date(byAdding: .hour, value: 24, to: .now)!

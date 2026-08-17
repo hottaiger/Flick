@@ -40,7 +40,7 @@ struct TaskCardView: View {
                       let id = UUID(uuidString: raw),
                       let dragged = store.tasks.first(where: { $0.id == id }),
                       dragged.id != task.id else { return false }
-                store.move(dragged, to: task.bucket, before: task)
+                store.move(dragged, before: task)
                 activity()
                 return true
             }
@@ -68,6 +68,17 @@ struct TaskCardView: View {
                 }
             }
             Spacer(minLength: 0)
+            Button {
+                store.togglePin(task)
+                activity()
+            } label: {
+                Image(systemName: task.isPinned ? "pin.fill" : "pin")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(task.isPinned ? .yellow : .secondary)
+            }
+            .buttonStyle(.plain)
+            .help(task.isPinned ? L10n.t("card.unpin") : L10n.t("card.pin"))
+            .accessibilityLabel(task.isPinned ? L10n.t("card.unpinAccessibility", task.title) : L10n.t("card.pinAccessibility", task.title))
             Button {
                 TaskTitleClipboard.copy(task.title)
                 activity()

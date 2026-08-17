@@ -24,12 +24,45 @@ final class TaskStoreTests: XCTestCase {
         XCTAssertEqual(store.activeTasks.count, 1)
     }
 
-    @MainActor func testMoveAppendsTaskToTargetBucket() throws {
+    @MainActor func testMoveAppendsToBoardEnd() throws {
         let store = try makeStore()
-        let first = try XCTUnwrap(store.add(title: "先做" , bucket: .now))
-        let second = try XCTUnwrap(store.add(title: "再做", bucket: .today))
-        store.move(second, to: .now)
-        XCTAssertEqual(store.tasks(in: .now).map(\.id), [first.id, second.id])
+        let first = try XCTUnwrap(store.add(title: "先做"))
+        let second = try XCTUnwrap(store.add(title: "再做"))
+        let third = try XCTUnwrap(store.add(title: "第三"))
+        store.move(first, before: nil)
+        XCTAssertEqual(store.boardTasks.map(\.id), [second.id, third.id, first.id])
+    }
+
+    @MainActor func testTogglePinMovesTaskToBoardTop() throws {
+        let store = try makeStore()
+        let first = try XCTUnwrap(store.add(title: "第一条"))
+        let second = try XCTUnwrap(store.add(title: "第二条"))
+        store.togglePin(second)
+        XCTAssertTrue(second.isPinned)
+        XCTAssertEqual(store.boardTasks.map(\.id), [second.id, first.id])
+        store.togglePin(second)
+        XCTAssertFalse(second.isPinned)
+        XCTAssertEqual(store.boardTasks.map(\.id), [first.id, second.id])
+    }
+
+    @MainActor func testBoardTasksPinnedFirstLatestOnTop() throws {
+        let store = try makeStore()
+        let a = try XCTUnwrap(store.add(title: "A"))
+        let b = try XCTUnwrap(store.add(title: "B"))
+        store.togglePin(a)
+        Thread.sleep(forTimeInterval: 0.02)
+        store.togglePin(b)
+        // 后置顶的 b 在最上，胶囊 headline（boardTasks.first）即最新置顶任务
+        XCTAssertEqual(store.boardTasks.map(\.id), [b.id, a.id])
+    }
+
+    @MainActor func testPinnedTaskCompletionLeavesBoard() throws {
+        let store = try makeStore()
+        let pinned = try XCTUnwrap(store.add(title: "置顶后完成"))
+        store.togglePin(pinned)
+        store.complete(pinned)
+        XCTAssertTrue(store.boardTasks.isEmpty)
+        XCTAssertEqual(store.completedTasks.count, 1)
     }
 
     @MainActor func testCompleteAndReopenTask() throws {
@@ -131,19 +164,19 @@ final class TaskStoreTests: XCTestCase {
 
     @MainActor func testMoveBeforeNeighborInsertsInOrder() throws {
         let store = try makeStore()
-        let a = try XCTUnwrap(store.add(title: "A", bucket: .later))
-        let b = try XCTUnwrap(store.add(title: "B", bucket: .later))
-        let c = try XCTUnwrap(store.add(title: "C", bucket: .later))
-        store.move(c, to: .later, before: a)
-        XCTAssertEqual(store.tasks(in: .later).map(\.id), [c.id, a.id, b.id])
+        let a = try XCTUnwrap(store.add(title: "A"))
+        let b = try XCTUnwrap(store.add(title: "B"))
+        let c = try XCTUnwrap(store.add(title: "C"))
+        store.move(c, before: a)
+        XCTAssertEqual(store.boardTasks.map(\.id), [c.id, a.id, b.id])
     }
 
     @MainActor func testMoveBeforeFirstGoesToTop() throws {
         let store = try makeStore()
-        let a = try XCTUnwrap(store.add(title: "A", bucket: .later))
-        let b = try XCTUnwrap(store.add(title: "B", bucket: .later))
-        store.move(b, to: .later, before: a)
-        XCTAssertEqual(store.tasks(in: .later).map(\.id), [b.id, a.id])
+        let a = try XCTUnwrap(store.add(title: "A"))
+        let b = try XCTUnwrap(store.add(title: "B"))
+        store.move(b, before: a)
+        XCTAssertEqual(store.boardTasks.map(\.id), [b.id, a.id])
     }
 
     @MainActor func testArchivedTasksExcludedFromActiveAndCompleted() throws {

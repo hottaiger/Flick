@@ -28,6 +28,10 @@
 
 /* Card */
 "card.overdue" = "逾期";
+"card.pin" = "置顶";
+"card.unpin" = "取消置顶";
+"card.pinAccessibility" = "置顶 %@";
+"card.unpinAccessibility" = "取消置顶 %@";
 "card.copyTitle" = "复制标题";
 "card.copyAccessibility" = "复制待办标题：%@";
 "card.completeAccessibility" = "完成 %@";

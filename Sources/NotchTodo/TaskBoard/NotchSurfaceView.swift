@@ -72,7 +72,7 @@ private struct CapsuleSummaryView: View {
     let usesTrailingSummaryLayout: Bool
     let isNotchAttached: Bool
 
-    private var headlineTask: TodoTask? { store.tasks(in: .now).first ?? store.tasks(in: .later).first }
+    private var headlineTask: TodoTask? { store.boardTasks.first }
     private var highestPriority: TaskPriority? { headlineTask?.priority }
 
     var body: some View {
