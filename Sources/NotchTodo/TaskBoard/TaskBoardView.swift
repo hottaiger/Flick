@@ -36,49 +36,9 @@ struct TaskBoardView: View {
                 Button { controller.collapse() } label: { Image(systemName: "xmark").font(.system(size: 11, weight: .bold)) }.buttonStyle(.plain).accessibilityLabel(L10n.t("board.collapse"))
             }
             QuickAddView(store: store, focused: $quickAddFocused, activity: controller.registerActivity)
-            VStack(alignment: .leading, spacing: 6) {
-                ForEach(store.boardTasks, id: \.id) { task in
-                    TaskCardView(task: task, store: store, editorTask: editorBinding, activity: controller.registerActivity)
-                        .draggable(task.id.uuidString)
-                }
-            }
-            .padding(7)
-            .frame(maxWidth: .infinity, minHeight: 220, alignment: .top)
-            .background(isBoardTargeted ? Color.accentColor.opacity(0.13) : Color.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .dropDestination(for: String.self) { identifiers, _ in
-                guard let raw = identifiers.first,
-                      let id = UUID(uuidString: raw),
-                      let task = store.tasks.first(where: { $0.id == id }) else { return false }
-                store.move(task, before: nil)
-                controller.registerActivity()
-                return true
-            } isTargeted: { isBoardTargeted = $0 }
-            if !store.completedTasks.isEmpty {
-                HStack {
-                    DisclosureGroup(L10n.t("board.completed", store.completedTasks.count), isExpanded: $isCompletedExpanded) {
-                        ForEach(store.completedTasks, id: \.id) { task in
-                            TaskCardView(task: task, store: store, editorTask: editorBinding, activity: controller.registerActivity)
-                        }
-                    }
-                    Spacer(minLength: 4)
-                    Button(L10n.t("board.clearCompleted")) { clearCompleted() }
-                        .buttonStyle(.plain).font(.system(size: 11)).foregroundStyle(.red)
-                }
-                .font(.system(size: 11))
-            }
-            if !store.archivedTasks.isEmpty {
-                DisclosureGroup(L10n.t("board.archived", store.archivedTasks.count), isExpanded: $isArchivedExpanded) {
-                    ForEach(store.archivedTasks, id: \.id) { task in
-                        HStack {
-                            Text(task.title).font(.system(size: 12)).strikethrough().foregroundStyle(.secondary).lineLimit(1)
-                            Spacer()
-                            Button(L10n.t("board.restore")) { store.unarchive(task); controller.registerActivity() }
-                                .buttonStyle(.plain).font(.system(size: 11)).foregroundStyle(.blue)
-                        }
-                    }
-                }
-                .font(.system(size: 11))
-            }
+            boardList
+            if !store.completedTasks.isEmpty { completedSection }
+            if !store.archivedTasks.isEmpty { archivedSection }
             if store.activeTasks.isEmpty {
                 Text(L10n.t("quickadd.empty"))
                     .font(.system(size: 12)).foregroundStyle(.secondary).frame(maxWidth: .infinity, minHeight: 42)
@@ -105,6 +65,55 @@ struct TaskBoardView: View {
         } message: {
             Text(store.saveError ?? "")
         }
+    }
+
+    /// 单栏任务列表（拖拽排序：拖到卡片上=插前，拖到空白=追加尾）。
+    private var boardList: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            ForEach(store.boardTasks, id: \.id) { task in
+                TaskCardView(task: task, store: store, editorTask: editorBinding, activity: controller.registerActivity)
+                    .draggable(task.id.uuidString)
+            }
+        }
+        .padding(7)
+        .frame(maxWidth: .infinity, minHeight: 220, alignment: .top)
+        .background(isBoardTargeted ? AnyShapeStyle(Color.accentColor.opacity(0.13)) : AnyShapeStyle(.quaternary.opacity(0.3)), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .dropDestination(for: String.self) { identifiers, _ in
+            guard let raw = identifiers.first,
+                  let id = UUID(uuidString: raw),
+                  let task = store.tasks.first(where: { $0.id == id }) else { return false }
+            store.move(task, before: nil)
+            controller.registerActivity()
+            return true
+        } isTargeted: { isBoardTargeted = $0 }
+    }
+
+    private var completedSection: some View {
+        HStack {
+            DisclosureGroup(L10n.t("board.completed", store.completedTasks.count), isExpanded: $isCompletedExpanded) {
+                ForEach(store.completedTasks, id: \.id) { task in
+                    TaskCardView(task: task, store: store, editorTask: editorBinding, activity: controller.registerActivity)
+                }
+            }
+            Spacer(minLength: 4)
+            Button(L10n.t("board.clearCompleted")) { clearCompleted() }
+                .buttonStyle(.plain).font(.caption).foregroundStyle(.red)
+        }
+        .font(.caption)
+    }
+
+    private var archivedSection: some View {
+        DisclosureGroup(L10n.t("board.archived", store.archivedTasks.count), isExpanded: $isArchivedExpanded) {
+            ForEach(store.archivedTasks, id: \.id) { task in
+                HStack {
+                    Text(task.title).font(.system(size: 12)).strikethrough().foregroundStyle(.secondary).lineLimit(1)
+                    Spacer()
+                    Button(L10n.t("board.restore")) { store.unarchive(task); controller.registerActivity() }
+                        .buttonStyle(.plain).font(.caption).foregroundStyle(.blue)
+                }
+            }
+        }
+        .font(.caption)
     }
 
     private func clearCompleted() {

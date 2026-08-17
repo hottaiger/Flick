@@ -17,7 +17,7 @@ struct TaskCardView: View {
     var body: some View {
         cardContent
             .padding(7)
-            .background(.background.opacity(0.55), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+            .background(.quaternary.opacity(0.55), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
             .contentShape(Rectangle())
             .onTapGesture { editorTask = task; activity() }
             .focusable()
@@ -64,7 +64,7 @@ struct TaskCardView: View {
                 Text(task.title).font(.system(size: 12, weight: .medium)).strikethrough(task.isCompleted).lineLimit(2)
                 if let dueDate = task.dueDate {
                     Label(task.isOverdue ? L10n.t("card.overdue") : dueDate.formatted(.dateTime.month(.abbreviated).day()), systemImage: task.isOverdue ? "exclamationmark.circle.fill" : "calendar")
-                        .font(.system(size: 9)).foregroundStyle(task.isOverdue ? .red : (task.isDueSoon ? .orange : .secondary))
+                        .font(.caption2).foregroundStyle(task.isOverdue ? .red : (task.isDueSoon ? .orange : .secondary))
                 }
             }
             Spacer(minLength: 0)
