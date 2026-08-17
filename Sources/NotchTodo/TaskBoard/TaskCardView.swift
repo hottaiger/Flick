@@ -74,7 +74,7 @@ struct TaskCardView: View {
             } label: {
                 Image(systemName: task.isPinned ? "pin.fill" : "pin")
                     .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(task.isPinned ? .yellow : .secondary)
+                    .foregroundStyle(task.isPinned ? .blue : .secondary)
             }
             .buttonStyle(.plain)
             .help(task.isPinned ? L10n.t("card.unpin") : L10n.t("card.pin"))
