@@ -1,8 +1,8 @@
-# NotchTodo Design
+# Flick Design
 
 ## Product
 
-NotchTodo is a local-only macOS 14+ utility that anchors a compact task status capsule at the MacBook notch and expands into a focused personal task board. It borrows the notch expansion interaction pattern only; its visual language, data model, and task workflow are original.
+Flick is a local-only macOS 14+ utility that anchors a compact task status capsule at the MacBook notch and expands into a focused personal task board. It borrows the notch expansion interaction pattern only; its visual language, data model, and task workflow are original.
 
 ## Architecture
 

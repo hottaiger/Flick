@@ -21,10 +21,10 @@
 /* Capsule */
 "capsule.empty" = "暂无待办";
 "capsule.count" = "%lld 项待办";
-"capsule.accessibility" = "NotchTodo，%lld 项未完成任务";
+"capsule.accessibility" = "Flick，%lld 项未完成任务";
 "capsule.hint" = "点击展开待办看板";
 "capsule.openBoard" = "打开待办看板";
-"capsule.quit" = "退出 NotchTodo";
+"capsule.quit" = "退出 Flick";
 
 /* Card */
 "card.overdue" = "逾期";
@@ -55,12 +55,12 @@
 "editor.save" = "保存";
 
 /* Onboarding */
-"onboarding.welcome" = "欢迎使用 NotchTodo";
+"onboarding.welcome" = "欢迎使用 Flick";
 "onboarding.body" = "点击刘海区域打开待办看板。Option + Enter 可随时切换。\n所有数据只保存在这台 Mac 上。";
 "onboarding.start" = "开始使用";
 
 /* Settings */
-"settings.windowTitle" = "NotchTodo 设置";
+"settings.windowTitle" = "Flick 设置";
 "settings.behavior" = "行为";
 "settings.display" = "显示器";
 "settings.launch" = "启动";
@@ -80,7 +80,7 @@
 "menu.export" = "导出 JSON…";
 "menu.import" = "导入 JSON…";
 "menu.settings" = "设置…";
-"menu.quit" = "退出 NotchTodo";
+"menu.quit" = "退出 Flick";
 "recovery.title" = "数据已恢复";
 
 /* Progress */

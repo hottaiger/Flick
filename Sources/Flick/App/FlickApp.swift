@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct NotchTodoApp: App {
+struct FlickApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some Scene {

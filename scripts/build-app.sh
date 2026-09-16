@@ -8,10 +8,10 @@ BUILD=$(git rev-list --count HEAD 2>/dev/null || echo "1")
 
 swift build -c release
 
-APP_PATH=".build/release/NotchTodo.app"
+APP_PATH=".build/release/Flick.app"
 rm -rf "$APP_PATH"
 mkdir -p "$APP_PATH/Contents/MacOS"
-cp ".build/release/NotchTodo" "$APP_PATH/Contents/MacOS/NotchTodo"
+cp ".build/release/Flick" "$APP_PATH/Contents/MacOS/Flick"
 
 # 拷贝 Info.plist 并注入版本号
 cp "Resources/Info.plist" "$APP_PATH/Contents/Info.plist"
@@ -30,7 +30,7 @@ fi
 codesign --force --sign - "$APP_PATH"
 
 # 打包 zip 便于分发
-ZIP_PATH="NotchTodo-macOS-arm64-${VERSION:-local}.zip"
+ZIP_PATH="Flick-macOS-aarch64-${VERSION:-local}.zip"
 rm -f "$ZIP_PATH"
 ditto -c -k --keepParent "$APP_PATH" "$ZIP_PATH"
 

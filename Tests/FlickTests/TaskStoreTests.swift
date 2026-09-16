@@ -1,7 +1,7 @@
 import XCTest
 import AppKit
 import SwiftData
-@testable import NotchTodo
+@testable import Flick
 
 final class TaskStoreTests: XCTestCase {
     func testCopyTitleWritesToGeneralPasteboard() throws {

@@ -2,12 +2,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "NotchTodo",
+    name: "Flick",
     defaultLocalization: "zh-Hans",
     platforms: [.macOS(.v14)],
-    products: [.executable(name: "NotchTodo", targets: ["NotchTodo"])],
+    products: [.executable(name: "Flick", targets: ["Flick"])],
     targets: [
-        .executableTarget(name: "NotchTodo", resources: [.process("Resources")]),
-        .testTarget(name: "NotchTodoTests", dependencies: ["NotchTodo"])
+        .executableTarget(name: "Flick", resources: [.process("Resources")]),
+        .testTarget(name: "FlickTests", dependencies: ["Flick"])
     ]
 )
