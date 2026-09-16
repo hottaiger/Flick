@@ -1,0 +1,78 @@
+name: Build and publish installers
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build macOS arm64
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build NotchTodo
+        run: zsh scripts/build-app.sh
+
+      - name: Rename release asset
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#v}"
+          if [[ "${GITHUB_REF_TYPE:-}" != "tag" ]]; then
+            VERSION="local"
+          fi
+          mv "NotchTodo-macOS-arm64-${VERSION}.zip" "NotchTodo-${VERSION}-aarch64-mac.zip"
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: notchtodo-macos-arm64
+          path: NotchTodo-*-aarch64-mac.zip
+          if-no-files-found: error
+
+  release:
+    name: Publish GitHub Release
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download installers
+        uses: actions/download-artifact@v4
+        with:
+          name: notchtodo-macos-arm64
+          path: release-assets
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cat > release-notes-preamble.md <<'EOF'
+          ## 安装说明（macOS Apple Silicon）
+
+          1. 下载 `NotchTodo-*-aarch64-mac.zip`
+          2. 解压后得到 `NotchTodo.app`
+          3. 本版本**未做 Apple 代码签名**。若系统提示「无法验证开发者」：
+             - 在 Finder 中右键应用 →「打开」→ 再次「打开」
+             - 或到「系统设置 → 隐私与安全性」中允许打开
+             - 若仍提示「已损坏」，可尝试（仅在确认来源可信时）：
+               ```bash
+               xattr -dr com.apple.quarantine ~/Downloads/NotchTodo.app
+               ```
+
+          仅支持 Apple Silicon（arm64）macOS 14+。
+
+          ---
+
+          EOF
+          gh release create "${GITHUB_REF_NAME}" release-assets/* \
+            --title "NotchTodo ${GITHUB_REF_NAME}" \
+            --notes-file release-notes-preamble.md \
+            --generate-notes \
+            --repo "${GITHUB_REPOSITORY}"
