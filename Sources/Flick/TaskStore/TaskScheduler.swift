@@ -23,7 +23,7 @@ final class TaskScheduler {
             try ArchiveService.archiveCompletedTasks(in: context)
             try ArchiveService.purgeExpiredArchives(in: context)
         } catch {
-            NSLog("NotchTodo scheduled archive failed: \(error.localizedDescription)")
+            NSLog("Flick scheduled archive failed: \(error.localizedDescription)")
         }
         scheduleNextArchivePass()
     }

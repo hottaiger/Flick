@@ -21,10 +21,10 @@
 /* Capsule */
 "capsule.empty" = "No tasks";
 "capsule.count" = "%lld tasks";
-"capsule.accessibility" = "NotchTodo, %lld incomplete tasks";
+"capsule.accessibility" = "Flick, %lld incomplete tasks";
 "capsule.hint" = "Click to expand the task board";
 "capsule.openBoard" = "Open task board";
-"capsule.quit" = "Quit NotchTodo";
+"capsule.quit" = "Quit Flick";
 
 /* Card */
 "card.overdue" = "Overdue";
@@ -55,12 +55,12 @@
 "editor.save" = "Save";
 
 /* Onboarding */
-"onboarding.welcome" = "Welcome to NotchTodo";
+"onboarding.welcome" = "Welcome to Flick";
 "onboarding.body" = "Click the notch area to open the task board. Toggle any time with Option + Enter.\nAll data stays only on this Mac.";
 "onboarding.start" = "Get started";
 
 /* Settings */
-"settings.windowTitle" = "NotchTodo Settings";
+"settings.windowTitle" = "Flick Settings";
 "settings.behavior" = "Behavior";
 "settings.display" = "Display";
 "settings.launch" = "Launch";
@@ -80,7 +80,7 @@
 "menu.export" = "Export JSON…";
 "menu.import" = "Import JSON…";
 "menu.settings" = "Settings…";
-"menu.quit" = "Quit NotchTodo";
+"menu.quit" = "Quit Flick";
 "recovery.title" = "Data restored";
 
 /* Progress */

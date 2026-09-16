@@ -1,6 +1,6 @@
 import XCTest
 import SwiftData
-@testable import NotchTodo
+@testable import Flick
 
 final class TaskTransferServiceTests: XCTestCase {
     @MainActor func testExportThenImportPreservesTask() throws {

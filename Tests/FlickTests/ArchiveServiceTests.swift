@@ -1,6 +1,6 @@
 import XCTest
 import SwiftData
-@testable import NotchTodo
+@testable import Flick
 
 final class ArchiveServiceTests: XCTestCase {
     @MainActor func testArchivesPreviousDayCompletionAndPurgesAfterThirtyDays() throws {

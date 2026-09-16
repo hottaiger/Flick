@@ -1,5 +1,5 @@
 import XCTest
-@testable import NotchTodo
+@testable import Flick
 
 final class TaskBoardDisplayTests: XCTestCase {
     func testCapsuleShowsFirstTitleAndTruncatesAfterFiveCharacters() {

@@ -1,4 +1,4 @@
-# NotchTodo 后续工作清单
+# Flick 后续工作清单
 
 记录 `review/codebase-improvements` 分支主动**拆出**的功能与工程项，
 便于后续按独立任务推进。每项含现状、依据、建议做法。

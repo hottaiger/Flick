@@ -60,10 +60,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func installStatusItem() {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        item.button?.image = NSImage(systemSymbolName: StatusBarIcon.symbolName, accessibilityDescription: "NotchTodo")
+        item.button?.image = NSImage(systemSymbolName: StatusBarIcon.symbolName, accessibilityDescription: "Flick")
         item.button?.title = ""
-        item.button?.toolTip = "NotchTodo"
-        item.button?.setAccessibilityLabel("NotchTodo")
+        item.button?.toolTip = "Flick"
+        item.button?.setAccessibilityLabel("Flick")
         let menu = NSMenu()
         menu.addItem(withTitle: L10n.t("menu.openBoard"), action: #selector(togglePanel), keyEquivalent: "")
         menu.addItem(withTitle: L10n.t("menu.export"), action: #selector(exportTasks), keyEquivalent: "")
@@ -96,7 +96,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         do {
             let panel = NSSavePanel()
             panel.allowedContentTypes = [.json]
-            panel.nameFieldStringValue = "NotchTodo-backup.json"
+            panel.nameFieldStringValue = "Flick-backup.json"
             guard panel.runModal() == .OK, let url = panel.url else { return }
             try TaskTransferService.exportData(from: store.context).write(to: url, options: .atomic)
         } catch { present(error) }

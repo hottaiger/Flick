@@ -1,5 +1,5 @@
 import SwiftData
-@testable import NotchTodo
+@testable import Flick
 
 @MainActor
 enum TestSupport {
