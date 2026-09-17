@@ -20,9 +20,19 @@ if [[ -n "$VERSION" ]]; then
 fi
 /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD" "$APP_PATH/Contents/Info.plist"
 
+mkdir -p "$APP_PATH/Contents/Resources"
+
+# 拷贝 SwiftPM 资源包（Localizable.strings 等）。
+# 漏拷时 Bundle.module 会在启动期 assertionFailure，表现为双击无反应。
+RESOURCE_BUNDLE=".build/release/Flick_Flick.bundle"
+if [[ ! -d "$RESOURCE_BUNDLE" ]]; then
+    echo "error: missing $RESOURCE_BUNDLE (did swift build skip resources?)" >&2
+    exit 1
+fi
+cp -R "$RESOURCE_BUNDLE" "$APP_PATH/Contents/Resources/"
+
 # 拷贝图标（如果存在）
 if [[ -f "Resources/AppIcon.icns" ]]; then
-    mkdir -p "$APP_PATH/Contents/Resources"
     cp "Resources/AppIcon.icns" "$APP_PATH/Contents/Resources/AppIcon.icns"
 fi
 
